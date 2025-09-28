@@ -1,10 +1,31 @@
 const getCine = async () => {
     const id = new URLSearchParams(window.location.search).get('id')
     const data = await fetch(`http://localhost:8012/cinestar_sweb_php/cines/${id}`)
-    if (data.status == 200) {
+
+	
+
+    if (data.status != 200)   return
+
         const cine = await data.json()
 
-        const cines = cine.data  // 👈 objeto único+
+        const cines = cine.data
+
+
+		//recorido de tarifas
+		let tarifashtml = ``
+		cines.tarifas.forEach((t) => {
+			tarifashtml += `
+							<div class="fila">
+								<div class="celda-titulo">${t.DiasSemana}</div>
+								<div class="celda">${t.Precio}</div>
+							</div>			
+			`
+		});
+
+		//recorido img
+		let imghtml1 = `
+		<img src="img/cine/${cines.id}.2.jpg"/>
+		`
 
 
         let html = `
@@ -15,44 +36,13 @@ const getCine = async () => {
 						<p>Teléfono: ${cines.Telefonos}</p>
 						<br/>
 						<div class="tabla">
-							<div class="fila">
-								<div class="celda-titulo">Lunes y Miércoles</div>
-								<div class="celda">S/. 4.00</div>
-							</div>
-							<div class="fila impar">
-								<div class="celda-titulo">Martes</div>
-								<div class="celda">S/. 3.50</div>
-							</div>
-							<div class="fila">
-								<div class="celda-titulo">Jueves y Viernes</div>
-								<div class="celda">S/. 6.50</div>
-							</div>
-							<div class="fila impar">
-								<div class="celda-titulo">Sábado, Domingo y Feriados</div>
-								<div class="celda">S/. 7.50</div>
-							</div>
-							<div class="fila">
-								<div class="celda-titulo">Adulto mayor y niños hasta 8 años (sábados, domingos y feriados)</div>
-								<div class="celda">S/. 4.00</div>
-							</div>
-							<div class="fila impar">
-								<div class="celda-titulo">3D - Lunes y Miércoles</div>
-								<div class="celda">S/. 7.50</div>
-							</div>
-							<div class="fila">
-								<div class="celda-titulo">3D - Martes</div>
-								<div class="celda">S/. 6.00</div>
-							</div>
-							<div class="fila impar">
-								<div class="celda-titulo">3D - Jueves a Domingo y Feriados</div>
-								<div class="celda">S/. 11.00</div>
-							</div>
+							${tarifashtml}
 						</div>
 						<div class="aviso">
 							<p>A partir del 1ro de julio de 2016, Cinestar Multicines realizará el cobro de la comisión de S/. 1.00 adicional al tarifario vigente, a los usuarios que compren sus entradas por el aplicativo de Cine Papaya para Cine Star Comas, Excelsior, Las Américas, Benavides, Breña, San Juan, UNI, Aviación, Sur, Porteño, Tumbes y Tacna.</p>
 						</div>
 					</div>
-					<img src="img/cine/1.2.jpg"/>
+					${imghtml1}
 					<br/><br/><h4>Los horarios de cada función están sujetos a cambios sin previo aviso.</h4><br/>
 					<div class="cine-info peliculas">
 						<div class="tabla">
@@ -96,7 +86,7 @@ const getCine = async () => {
             `
 
         document.getElementById('contenido-interno').innerHTML = html
-    }
+    
 }
 
 getCine()
