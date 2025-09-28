@@ -2,20 +2,17 @@ const getCine = async () => {
     const id = new URLSearchParams(window.location.search).get('id')
     const data = await fetch(`http://localhost:8012/cinestar_sweb_php/cines/${id}`)
 
-	
-
     if (data.status != 200)   return
 
         const cine = await data.json()
 
         const cines = cine.data
 
-
 		//recorido de tarifas
 		let tarifashtml = ``
-		cines.tarifas.forEach((t) => {
+		cines.tarifas.forEach((t, index) => {
 			tarifashtml += `
-							<div class="fila">
+							<div class="fila ${index % 2 === 0 ? 'impar' : ''}">
 								<div class="celda-titulo">${t.DiasSemana}</div>
 								<div class="celda">${t.Precio}</div>
 							</div>			
@@ -24,6 +21,7 @@ const getCine = async () => {
 
 		//recorrido Pelicula Horario
 		let peliHorarioHtml = ``
+
 		cines.peliculas.forEach((ph, index) => {
 			peliHorarioHtml +=`
 			<div class="fila ${index % 2 === 0 ? 'impar' : ''}">
@@ -75,9 +73,7 @@ const getCine = async () => {
 		</div>
 		<div class="clearbox"><br/></div>
             `
-
         document.getElementById('contenido-interno').innerHTML = html
-    
 }
 
 getCine()
