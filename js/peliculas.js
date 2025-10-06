@@ -5,6 +5,8 @@ const getPeliculas = async () => {
 
         const peliculas = await data.json()
 
+		
+
         let html = `<br/><h1>Cartelera</h1><br/>`
 
         peliculas.data.forEach(pelicula => {
